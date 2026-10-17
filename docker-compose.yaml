@@ -1,6 +1,6 @@
 services:
   honey:
-    image: ghcr.io/dani3l0/honey:latest
+    image: ghcr.io/thetoadsage/honey:latest
     container_name: honey
     restart: unless-stopped
     volumes:

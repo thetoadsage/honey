@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 # Build honey
-RUN npm install
+RUN npm ci
 RUN npm run build
 
 # Run a built-in webserver

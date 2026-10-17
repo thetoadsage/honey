@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+dist
+config
+**/memory.md
+**/MEMORY.md
+.env
+.env.*
+**/.DS_Store

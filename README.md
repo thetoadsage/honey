@@ -5,6 +5,8 @@ _A sweet dashboard I use on my homeserver with some self-hosted stuff..._
 honey is written in **pure** `HTML` `CSS` `JS` so dynamic backend or special webserver configuration is not required.
 It works out-of-the-box as all operations are done client-side.
 
+This fork adjusts scrolling for iOS Safari's browser toolbars. Container images are published to `ghcr.io/thetoadsage/honey` for both `linux/amd64` and `linux/arm64`.
+
 <font size="4">**[📺 Live demo](https://honeyy.vercel.app/)**</font>
 
 <img src="screenshot.jpg" style="width: 720px">
@@ -24,7 +26,7 @@ It works out-of-the-box as all operations are done client-side.
 ### 🐋 via Docker
 
 ```
-docker run -p 4173:4173 -v /path/to/config:/app/dist/config ghcr.io/dani3l0/honey:latest
+docker run -p 4173:4173 -v /path/to/config:/app/dist/config ghcr.io/thetoadsage/honey:latest
 ```
 
 - `-p 4173:4173` - exposes HTTP port to your machine
@@ -34,6 +36,23 @@ If you have custom icons or background images, you can freely put them in `confi
 Just remember to provide valid URLs (with `/config` prefix).
 
 _alternatively, use a `docker-compose.yml` file_
+
+### Updating an existing installation to this fork
+
+Change the Honey service's image to:
+
+```yaml
+image: ghcr.io/thetoadsage/honey:latest
+```
+
+Keep your existing ports, configuration volume, and other service settings. From your Compose directory, pull and recreate only Honey (replace `honey` if your service has another name):
+
+```sh
+docker compose pull honey
+docker compose up -d --no-deps honey
+```
+
+The `latest` tag tracks this fork's `main` branch. Each build also publishes a `sha-<short-commit>` tag for pinning a specific build. The existing configuration mount at `/app/dist/config` is unchanged, and startup copies only missing default files. Reload Safari after updating to load the new assets.
 
 
 ## ⚙️ Configuration
@@ -93,7 +112,7 @@ How to prepare a development environment:
 
 ```
 # Download the source code
-git clone https://github.com/dani3l0/honey && cd honey
+git clone https://github.com/thetoadsage/honey && cd honey
 
 # Install required modules
 npm i

@@ -4,10 +4,16 @@
 name: Create and publish a Docker image
 
 
-# Build Docker image on new release
+# Publish the fork on main updates, version tags, or a manual run.
 on:
   push:
+    branches: [main]
     tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: container-${{ github.ref }}
+  cancel-in-progress: false
 
 
 # Set registry to GitHub Container Registry
@@ -48,8 +54,13 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
+            type=sha
 
       - name: Build and push Docker image
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -58,3 +69,18 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Verify published image
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+        run: |
+          docker run --rm --entrypoint sh "$IMAGE" -ec '
+            test ! -e /app/memory.md
+            test ! -e /app/MEMORY.md
+            test ! -e /app/.git
+            grep -q "100dvh" /app/dist/assets/*.css
+          '
+          docker run -d --name honey-smoke -p 127.0.0.1:4173:4173 "$IMAGE"
+          trap 'docker logs honey-smoke; docker rm -f honey-smoke' EXIT
+          curl --fail --silent --show-error --retry 15 --retry-connrefused --retry-delay 2 http://127.0.0.1:4173/ > /dev/null
+          curl --fail --silent --show-error http://127.0.0.1:4173/config/config.json > /dev/null

@@ -9,9 +9,16 @@
 	width: 100%;
 	max-width: 920px;
 	height: 100vh;
+	/* Follow Safari's visible viewport as its browser toolbars change. */
+	height: 100dvh;
 	transform: translateX(-50%);
 	overflow-y: scroll;
 	transition: top .4s, opacity .4s, visibility .4s, color .3s;
+}
+
+.page:not(.home) {
+	box-sizing: border-box;
+	padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .page:not(.current) {
