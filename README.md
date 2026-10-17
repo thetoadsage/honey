@@ -5,7 +5,7 @@ _A sweet dashboard I use on my homeserver with some self-hosted stuff..._
 honey is written in **pure** `HTML` `CSS` `JS` so dynamic backend or special webserver configuration is not required.
 It works out-of-the-box as all operations are done client-side.
 
-This fork adjusts scrolling for iOS Safari's browser toolbars. Container images are published to `ghcr.io/thetoadsage/honey` for both `linux/amd64` and `linux/arm64`.
+This fork uses native document scrolling on touch devices to avoid trapping the service list inside a fixed scroll area in iOS Safari. Container images are published to `ghcr.io/thetoadsage/honey` for both `linux/amd64` and `linux/arm64`.
 
 <font size="4">**[📺 Live demo](https://honeyy.vercel.app/)**</font>
 
