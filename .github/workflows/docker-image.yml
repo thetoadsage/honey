@@ -82,5 +82,5 @@ jobs:
           '
           docker run -d --name honey-smoke -p 127.0.0.1:4173:4173 "$IMAGE"
           trap 'docker logs honey-smoke; docker rm -f honey-smoke' EXIT
-          curl --fail --silent --show-error --retry 15 --retry-connrefused --retry-delay 2 http://127.0.0.1:4173/ > /dev/null
+          curl --fail --silent --show-error --retry 15 --retry-all-errors --retry-delay 2 --max-time 5 http://127.0.0.1:4173/ > /dev/null
           curl --fail --silent --show-error http://127.0.0.1:4173/config/config.json > /dev/null
